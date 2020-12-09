@@ -57,10 +57,12 @@ resource "azurerm_linux_virtual_machine" "vmAula" {
     depends_on = [ azurerm_resource_group.rgAula, azurerm_network_interface.nicAula, azurerm_storage_account.storageAula, azurerm_public_ip.publicipAula ]
 }
 
+resource "time_sleep" "wait_30_seconds" {
+  depends_on = [azurerm_linux_virtual_machine.vmAula]
+  create_duration = "30s"
+}
+
 resource "null_resource" "upload" {
-    triggers = {
-        order = azurerm_linux_virtual_machine.vmAula.id
-    }
     provisioner "file" {
         connection {
             type = "ssh"
@@ -71,6 +73,8 @@ resource "null_resource" "upload" {
         source = "springapp/springapp.zip"
         destination = "/home/azureuser/springapp.zip"
     }
+
+    depends_on = [ time_sleep.wait_30_seconds ]
 }
 
 resource "null_resource" "deploy" {
@@ -90,7 +94,8 @@ resource "null_resource" "deploy" {
             "mkdir /home/azureuser/springapp",
             "rm -rf /home/azureuser/springapp/*.*",
             "unzip -o /home/azureuser/springapp.zip -d /home/azureuser/springapp",
-            "java -jar /home/azureuser/springapp/*.jar &",
+            "nohup java -jar /home/azureuser/springapp/*.jar &",
+            "sleep 20",
         ]
     }
 }

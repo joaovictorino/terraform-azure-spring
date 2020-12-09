@@ -58,6 +58,9 @@ resource "azurerm_linux_virtual_machine" "vmAula" {
 }
 
 resource "null_resource" "upload" {
+    triggers = {
+        order = azurerm_linux_virtual_machine.vmAula.id
+    }
     provisioner "file" {
         connection {
             type = "ssh"
@@ -68,8 +71,6 @@ resource "null_resource" "upload" {
         source = "springapp/springapp.zip"
         destination = "/home/azureuser/springapp.zip"
     }
-
-    depends_on = [ azurerm_linux_virtual_machine.vmAula ]
 }
 
 resource "null_resource" "deployapp" {

@@ -73,7 +73,7 @@ resource "null_resource" "upload" {
     }
 }
 
-resource "null_resource" "deployapp" {
+resource "null_resource" "deploy" {
     triggers = {
         order = null_resource.upload.id
     }
@@ -88,9 +88,26 @@ resource "null_resource" "deployapp" {
             "sudo apt-get update",
             "sudo apt-get install -y openjdk-11-jre unzip",
             "mkdir /home/azureuser/springapp",
-            "rm -rf /home/azureuser/springapp/*",
-            "unzip /home/azureuser/springapp.zip -d springapp",
-            "java -jar /home/azureuser/springapp/*.jar &"
+            "rm -rf /home/azureuser/springapp/*.*",
+            "unzip -o /home/azureuser/springapp.zip -d /home/azureuser/springapp",
+            "java -jar /home/azureuser/springapp/*.jar &",
+        ]
+    }
+}
+
+resource "null_resource" "run" {
+    triggers = {
+        order = null_resource.deploy.id
+    }
+    provisioner "remote-exec" {
+        connection {
+            type = "ssh"
+            user = var.user
+            password = var.password
+            host = azurerm_public_ip.publicipAula.ip_address
+        }
+        inline = [
+            "java -jar /home/azureuser/springapp/*.jar &",
         ]
     }
 }

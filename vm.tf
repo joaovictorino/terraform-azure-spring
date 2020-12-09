@@ -99,20 +99,3 @@ resource "null_resource" "deploy" {
         ]
     }
 }
-
-resource "null_resource" "run" {
-    triggers = {
-        order = null_resource.deploy.id
-    }
-    provisioner "remote-exec" {
-        connection {
-            type = "ssh"
-            user = var.user
-            password = var.password
-            host = azurerm_public_ip.publicipAula.ip_address
-        }
-        inline = [
-            "java -jar /home/azureuser/springapp/*.jar &",
-        ]
-    }
-}

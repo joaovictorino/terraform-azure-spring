@@ -1,4 +1,4 @@
-resource "azurerm_resource_group" "rgAula" {
+resource "azurerm_resource_group" "rg_aula" {
     name     = "myResourceGroup"
     location = var.location
 
@@ -7,9 +7,9 @@ resource "azurerm_resource_group" "rgAula" {
     }
 }
 
-resource "azurerm_storage_account" "storageAula" {
+resource "azurerm_storage_account" "storage_aula" {
     name                        = "storageaula2"
-    resource_group_name         = azurerm_resource_group.rgAula.name
+    resource_group_name         = azurerm_resource_group.rg_aula.name
     location                    = var.location
     account_tier                = "Standard"
     account_replication_type    = "LRS"
@@ -18,14 +18,14 @@ resource "azurerm_storage_account" "storageAula" {
         environment = "aula infra"
     }
 
-    depends_on = [ azurerm_resource_group.rgAula ]
+    depends_on = [ azurerm_resource_group.rg_aula ]
 }
 
-resource "azurerm_linux_virtual_machine" "vmAula" {
+resource "azurerm_linux_virtual_machine" "vm_aula" {
     name                  = "myVM"
     location              = var.location
-    resource_group_name   = azurerm_resource_group.rgAula.name
-    network_interface_ids = [azurerm_network_interface.nicAula.id]
+    resource_group_name   = azurerm_resource_group.rg_aula.name
+    network_interface_ids = [azurerm_network_interface.nic_aula.id]
     size                  = "Standard_DS1_v2"
 
     os_disk {
@@ -47,18 +47,18 @@ resource "azurerm_linux_virtual_machine" "vmAula" {
     disable_password_authentication = false
 
     boot_diagnostics {
-        storage_account_uri = azurerm_storage_account.storageAula.primary_blob_endpoint
+        storage_account_uri = azurerm_storage_account.storage_aula.primary_blob_endpoint
     }
 
     tags = {
         environment = "aula infra"
     }
 
-    depends_on = [ azurerm_resource_group.rgAula, azurerm_network_interface.nicAula, azurerm_storage_account.storageAula, azurerm_public_ip.publicipAula ]
+    depends_on = [ azurerm_resource_group.rg_aula, azurerm_network_interface.nic_aula, azurerm_storage_account.storage_aula, azurerm_public_ip.publicip_aula ]
 }
 
 resource "time_sleep" "wait_30_seconds" {
-  depends_on = [azurerm_linux_virtual_machine.vmAula]
+  depends_on = [azurerm_linux_virtual_machine.vm_aula]
   create_duration = "30s"
 }
 
@@ -68,7 +68,7 @@ resource "null_resource" "upload" {
             type = "ssh"
             user = var.user
             password = var.password
-            host = azurerm_public_ip.publicipAula.ip_address
+            host = data.azurerm_public_ip.ip_aula_data.ip_address
         }
         source = "springapp/springapp.zip"
         destination = "/home/azureuser/springapp.zip"
@@ -86,7 +86,7 @@ resource "null_resource" "deploy" {
             type = "ssh"
             user = var.user
             password = var.password
-            host = azurerm_public_ip.publicipAula.ip_address
+            host = data.azurerm_public_ip.ip_aula_data.ip_address
         }
         inline = [
             "sudo apt-get update",

@@ -8,7 +8,7 @@ resource "azurerm_resource_group" "rg_aula" {
 }
 
 resource "azurerm_storage_account" "storage_aula" {
-    name                        = "storageaula2"
+    name                        = "storageaulavm"
     resource_group_name         = azurerm_resource_group.rg_aula.name
     location                    = var.location
     account_tier                = "Standard"
@@ -94,7 +94,7 @@ resource "null_resource" "deploy" {
             "mkdir /home/azureuser/springapp",
             "rm -rf /home/azureuser/springapp/*.*",
             "unzip -o /home/azureuser/springapp.zip -d /home/azureuser/springapp",
-            "nohup java -jar /home/azureuser/springapp/*.jar &",
+            "nohup java -Dspring.profiles.active=mysql -jar /home/azureuser/springapp/*.jar &",
             "sleep 20",
         ]
     }

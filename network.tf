@@ -1,6 +1,6 @@
 resource "azurerm_virtual_network" "vnet_aula" {
     name                = "myVnet"
-    address_space       = ["10.0.0.0/16"]
+    address_space       = ["10.80.0.0/16"]
     location            = var.location
     resource_group_name = azurerm_resource_group.rg_aula.name
 
@@ -15,7 +15,7 @@ resource "azurerm_subnet" "subnet_aula" {
     name                 = "mySubnet"
     resource_group_name  = azurerm_resource_group.rg_aula.name
     virtual_network_name = azurerm_virtual_network.vnet_aula.name
-    address_prefixes       = ["10.0.1.0/24"]
+    address_prefixes       = ["10.80.4.0/24"]
 
     depends_on = [ azurerm_resource_group.rg_aula, azurerm_virtual_network.vnet_aula ]
 }
@@ -91,7 +91,7 @@ resource "azurerm_network_interface" "nic_aula" {
         name                          = "myNicConfiguration"
         subnet_id                     = azurerm_subnet.subnet_aula.id
         private_ip_address_allocation = "Static"
-        private_ip_address            = "10.0.1.5"
+        private_ip_address            = "10.80.4.11"
         public_ip_address_id          = azurerm_public_ip.publicip_aula.id
     }
 

@@ -70,8 +70,8 @@ resource "null_resource" "upload" {
             password = var.password
             host = data.azurerm_public_ip.ip_aula_data.ip_address
         }
-        source = "springapp/springapp.zip"
-        destination = "/home/azureuser/springapp.zip"
+        source = "springapp"
+        destination = "/home/azureuser"
     }
 
     depends_on = [ time_sleep.wait_30_seconds ]
@@ -91,10 +91,10 @@ resource "null_resource" "deploy" {
         inline = [
             "sudo apt-get update",
             "sudo apt-get install -y openjdk-11-jre unzip",
-            "mkdir /home/azureuser/springapp",
-            "rm -rf /home/azureuser/springapp/*.*",
-            "unzip -o /home/azureuser/springapp.zip -d /home/azureuser/springapp",
-            "nohup java -Dspring.profiles.active=mysql -jar /home/azureuser/springapp/*.jar &",
+            "mkdir /home/azureuser/springmvcapp",
+            "rm -rf /home/azureuser/springmvcapp/*.*",
+            "unzip -o /home/azureuser/springapp/springapp.zip -d /home/azureuser/springmvcapp",
+            "nohup java -Dspring.profiles.active=mysql -jar /home/azureuser/springmvcapp/*.jar &",
             "sleep 20",
         ]
     }

@@ -63,18 +63,6 @@ resource "azurerm_network_security_group" "sg_aula" {
         destination_address_prefix = "*"
     }
 
-    security_rule {
-        name                       = "HTTPOutbound"
-        priority                   = 1003
-        direction                  = "Outbound"
-        access                     = "Allow"
-        protocol                   = "Tcp"
-        source_port_range          = "*"
-        destination_port_range     = "8080"
-        source_address_prefix      = "*"
-        destination_address_prefix = "*"
-    }
-
     tags = {
         environment = "aula infra"
     }

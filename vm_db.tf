@@ -65,7 +65,7 @@ resource "null_resource" "upload_db" {
         destination = "/home/azureuser"
     }
 
-    depends_on = [ time_sleep.wait_30_seconds ]
+    depends_on = [ time_sleep.wait_30_seconds_db ]
 }
 
 resource "null_resource" "deploy_db" {

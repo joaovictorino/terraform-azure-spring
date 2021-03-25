@@ -13,3 +13,12 @@ provider "azurerm" {
   skip_provider_registration = true
   features {}
 }
+
+resource "azurerm_resource_group" "rg_aula" {
+    name     = "myResourceGroup"
+    location = var.location
+
+    tags = {
+        environment = "aula infra"
+    }
+}

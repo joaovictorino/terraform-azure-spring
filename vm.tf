@@ -1,12 +1,3 @@
-resource "azurerm_resource_group" "rg_aula" {
-    name     = "myResourceGroup"
-    location = var.location
-
-    tags = {
-        environment = "aula infra"
-    }
-}
-
 resource "azurerm_storage_account" "storage_aula" {
     name                        = "storageaulavm"
     resource_group_name         = azurerm_resource_group.rg_aula.name

@@ -53,7 +53,7 @@ resource "time_sleep" "wait_30_seconds" {
   create_duration = "30s"
 }
 
-resource "null_resource" "upload" {
+resource "null_resource" "upload1" {
     provisioner "file" {
         connection {
             type = "ssh"
@@ -70,7 +70,7 @@ resource "null_resource" "upload" {
 
 resource "null_resource" "deploy" {
     triggers = {
-        order = null_resource.upload.id
+        order = null_resource.upload1.id
     }
     provisioner "remote-exec" {
         connection {
@@ -85,8 +85,10 @@ resource "null_resource" "deploy" {
             "mkdir /home/azureuser/springmvcapp",
             "rm -rf /home/azureuser/springmvcapp/*.*",
             "unzip -o /home/azureuser/springapp/springapp.zip -d /home/azureuser/springmvcapp",
-            "nohup java -Dspring.profiles.active=mysql -jar /home/azureuser/springmvcapp/*.jar &",
-            "sleep 20",
+            "sudo mkdir -p /var/log/springapp",
+            "sudo cp /home/azureuser/springapp/springapp.service /etc/systemd/system/springapp.service",
+            "sudo systemctl start springapp.service",
+            "sudo systemctl enable springapp.service"
         ]
     }
 }

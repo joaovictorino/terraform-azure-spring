@@ -20,7 +20,7 @@ resource "azurerm_linux_virtual_machine" "vm_aula" {
     size                  = "Standard_DS1_v2"
 
     os_disk {
-        name              = "myOsDisk"
+        name              = "myOsAppDisk"
         caching           = "ReadWrite"
         storage_account_type = "Premium_LRS"
     }
@@ -48,11 +48,6 @@ resource "azurerm_linux_virtual_machine" "vm_aula" {
     depends_on = [ azurerm_resource_group.rg_aula, azurerm_network_interface.nic_aula, azurerm_storage_account.storage_aula, azurerm_public_ip.publicip_aula ]
 }
 
-resource "time_sleep" "wait_30_seconds" {
-  depends_on = [azurerm_linux_virtual_machine.vm_aula]
-  create_duration = "30s"
-}
-
 resource "null_resource" "upload1" {
     provisioner "file" {
         connection {
@@ -65,7 +60,7 @@ resource "null_resource" "upload1" {
         destination = "/home/azureuser"
     }
 
-    depends_on = [ time_sleep.wait_30_seconds ]
+    depends_on = [azurerm_linux_virtual_machine.vm_aula]
 }
 
 resource "null_resource" "deploy" {

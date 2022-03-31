@@ -48,11 +48,6 @@ resource "azurerm_linux_virtual_machine" "vm_aula_db" {
     depends_on = [ azurerm_resource_group.rg_aula, azurerm_network_interface.nic_aula_db, azurerm_storage_account.storage_aula_db, azurerm_public_ip.publicip_aula_db ]
 }
 
-resource "time_sleep" "wait_30_seconds_db" {
-  depends_on = [azurerm_linux_virtual_machine.vm_aula_db]
-  create_duration = "30s"
-}
-
 resource "null_resource" "upload_db" {
     provisioner "file" {
         connection {
@@ -65,7 +60,7 @@ resource "null_resource" "upload_db" {
         destination = "/home/azureuser"
     }
 
-    depends_on = [ time_sleep.wait_30_seconds_db ]
+    depends_on = [azurerm_linux_virtual_machine.vm_aula_db]
 }
 
 resource "null_resource" "deploy_db" {

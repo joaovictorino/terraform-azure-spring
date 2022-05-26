@@ -1,5 +1,5 @@
 resource "azurerm_storage_account" "storage_aula" {
-    name                        = "storageaulavm"
+    name                        = "storageaulavmiaas"
     resource_group_name         = azurerm_resource_group.rg_aula.name
     location                    = var.location
     account_tier                = "Standard"

@@ -17,8 +17,14 @@ provider "azurerm" {
   }
 }
 
+resource "random_string" "random_rg" {
+  length           = 4
+  upper            = false
+  special          = false
+}
+
 resource "azurerm_resource_group" "rg_aula" {
-    name     = "myResourceGroup"
+    name     = "myResourceGroup${random_string.random_rg.result}"
     location = var.location
 
     tags = {

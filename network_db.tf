@@ -38,8 +38,3 @@ resource "azurerm_network_interface_security_group_association" "nicsq_aula_db" 
 
     depends_on = [ azurerm_network_interface.nic_aula_db, azurerm_network_security_group.sg_aula ]
 }
-
-data "azurerm_public_ip" "ip_aula_data_db" {
-  name                = azurerm_public_ip.publicip_aula_db.name
-  resource_group_name = azurerm_resource_group.rg_aula.name
-}

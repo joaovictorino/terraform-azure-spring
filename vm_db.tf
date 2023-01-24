@@ -60,7 +60,7 @@ resource "null_resource" "upload_db" {
             type = "ssh"
             user = var.user
             password = var.password
-            host = data.azurerm_public_ip.ip_aula_data_db.ip_address
+            host = azurerm_public_ip.publicip_aula_db.ip_address
         }
         source = "mysql"
         destination = "/home/azureuser"
@@ -78,7 +78,7 @@ resource "null_resource" "deploy_db" {
             type = "ssh"
             user = var.user
             password = var.password
-            host = data.azurerm_public_ip.ip_aula_data_db.ip_address
+            host = azurerm_public_ip.publicip_aula_db.ip_address
         }
         inline = [
             "sudo apt-get update",

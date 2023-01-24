@@ -54,13 +54,13 @@ resource "azurerm_linux_virtual_machine" "vm_aula" {
     depends_on = [ azurerm_resource_group.rg_aula, azurerm_network_interface.nic_aula, azurerm_storage_account.storage_aula, azurerm_public_ip.publicip_aula ]
 }
 
-resource "null_resource" "upload1" {
+resource "null_resource" "upload" {
     provisioner "file" {
         connection {
             type = "ssh"
             user = var.user
             password = var.password
-            host = data.azurerm_public_ip.ip_aula_data.ip_address
+            host = azurerm_public_ip.publicip_aula.ip_address
         }
         source = "springapp"
         destination = "/home/azureuser"
@@ -71,14 +71,14 @@ resource "null_resource" "upload1" {
 
 resource "null_resource" "deploy" {
     triggers = {
-        order = null_resource.upload1.id
+        order = null_resource.upload.id
     }
     provisioner "remote-exec" {
         connection {
             type = "ssh"
             user = var.user
             password = var.password
-            host = data.azurerm_public_ip.ip_aula_data.ip_address
+            host = azurerm_public_ip.publicip_aula.ip_address
         }
         inline = [
             "sudo apt-get update",

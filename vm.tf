@@ -63,7 +63,7 @@ resource "null_resource" "upload" {
             host = azurerm_public_ip.publicip_aula.ip_address
         }
         source = "springapp"
-        destination = "/home/azureuser"
+        destination = "/home/${var.user}"
     }
 
     depends_on = [azurerm_linux_virtual_machine.vm_aula]

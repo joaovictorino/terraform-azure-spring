@@ -1,23 +1,3 @@
-resource "random_string" "random_vm" {
-  length  = 20
-  upper   = false
-  special = false
-}
-
-resource "azurerm_storage_account" "sa-aula-app" {
-  name                     = "app${random_string.random_vm.result}"
-  resource_group_name      = azurerm_resource_group.rg-aula.name
-  location                 = var.location
-  account_tier             = "Standard"
-  account_replication_type = "LRS"
-
-  tags = {
-    environment = "aula infra"
-  }
-
-  depends_on = [azurerm_resource_group.rg-aula]
-}
-
 resource "azurerm_linux_virtual_machine" "vm-aula-app" {
   name                  = "vm-aula-app"
   location              = var.location
@@ -43,15 +23,11 @@ resource "azurerm_linux_virtual_machine" "vm-aula-app" {
   admin_password                  = var.password
   disable_password_authentication = false
 
-  boot_diagnostics {
-    storage_account_uri = azurerm_storage_account.sa-aula-app.primary_blob_endpoint
-  }
-
   tags = {
     environment = "aula infra"
   }
 
-  depends_on = [azurerm_resource_group.rg-aula, azurerm_network_interface.nic-aula-app, azurerm_storage_account.sa-aula-app, azurerm_public_ip.pip-aula-app]
+  depends_on = [azurerm_resource_group.rg-aula, azurerm_network_interface.nic-aula-app, azurerm_public_ip.pip-aula-app]
 }
 
 resource "null_resource" "upload-app" {

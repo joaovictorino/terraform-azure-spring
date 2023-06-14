@@ -58,7 +58,14 @@ resource "null_resource" "deploy-db" {
     }
     inline = [
       "sudo apt-get update",
-      "sudo apt-get install -y mysql-server-5.7",
+      "sudo apt-get upgrade -y",
+      "sudo apt-get install -y debconf-utils zsh htop libaio1",
+      "sudo debconf-set-selections <<EOF\nmysql-apt-config mysql-apt-config/select-server select mysql-8.0\nmysql-community-server mysql-community/root-pass password root\nmysql-community-server mysql-community/re-root-pass password root\nEOF",
+      "wget --user-agent=\"Mozilla\" -O /tmp/mysql-apt-config_0.8.24-1_all.deb https://dev.mysql.com/get/mysql-apt-config_0.8.24-1_all.deb",
+      "export DEBIAN_FRONTEND=\"noninteractive\"",
+      "sudo -E dpkg -i /tmp/mysql-apt-config_0.8.24-1_all.deb",
+      "sudo apt-get update",
+      "sudo -E apt-get install mysql-server mysql-client --assume-yes --allow",
       "sudo mysql < /home/azureuser/mysql/script/user.sql",
       "sudo mysql < /home/azureuser/mysql/script/schema.sql",
       "sudo mysql < /home/azureuser/mysql/script/data.sql",

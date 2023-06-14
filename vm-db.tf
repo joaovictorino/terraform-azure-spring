@@ -65,7 +65,7 @@ resource "null_resource" "deploy-db" {
       "export DEBIAN_FRONTEND=\"noninteractive\"",
       "sudo -E dpkg -i /tmp/mysql-apt-config_0.8.24-1_all.deb",
       "sudo apt-get update",
-      "sudo -E apt-get install mysql-server mysql-client --assume-yes --allow",
+      "sudo -E apt-get install mysql-server mysql-client --assume-yes --force-yes",
       "sudo mysql < /home/azureuser/mysql/script/user.sql",
       "sudo mysql < /home/azureuser/mysql/script/schema.sql",
       "sudo mysql < /home/azureuser/mysql/script/data.sql",

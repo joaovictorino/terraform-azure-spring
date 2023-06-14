@@ -31,6 +31,10 @@ resource "azurerm_linux_virtual_machine" "vm-aula-db" {
 }
 
 resource "null_resource" "upload-db" {
+  triggers = {
+    order = azurerm_linux_virtual_machine.vm-aula-db.id
+  }
+
   provisioner "file" {
     connection {
       type     = "ssh"
@@ -39,10 +43,8 @@ resource "null_resource" "upload-db" {
       host     = azurerm_public_ip.pip-aula-db.ip_address
     }
     source      = "mysql"
-    destination = "/home/azureuser"
+    destination = "/home/${var.user}"
   }
-
-  depends_on = [azurerm_linux_virtual_machine.vm-aula-db]
 }
 
 resource "null_resource" "deploy-db" {

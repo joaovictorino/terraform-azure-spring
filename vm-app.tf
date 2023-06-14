@@ -31,6 +31,10 @@ resource "azurerm_linux_virtual_machine" "vm-aula-app" {
 }
 
 resource "null_resource" "upload-app" {
+  triggers = {
+    order = azurerm_linux_virtual_machine.vm-aula-app.id
+  }
+
   provisioner "file" {
     connection {
       type     = "ssh"
@@ -41,11 +45,9 @@ resource "null_resource" "upload-app" {
     source      = "springapp"
     destination = "/home/${var.user}"
   }
-
-  depends_on = [azurerm_linux_virtual_machine.vm-aula-app]
 }
 
-resource "null_resource" "deploy" {
+resource "null_resource" "deploy-app" {
   triggers = {
     order = null_resource.upload-app.id
   }

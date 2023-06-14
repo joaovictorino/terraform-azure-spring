@@ -62,28 +62,3 @@ resource "null_resource" "deploy" {
     ]
   }
 }
-
-#resource "null_resource" "deploy" {
-#  triggers = {
-#    order = null_resource.upload-app.id
-#  }
-#  provisioner "remote-exec" {
-#    connection {
-#      type     = "ssh"
-#      user     = var.user
-#      password = var.password
-#      host     = azurerm_public_ip.pip-aula-app.ip_address
-#    }
-#    inline = [
-#      "sudo apt-get update",
-#      "sudo apt-get install -y openjdk-11-jre unzip",
-#      "mkdir /home/azureuser/springmvcapp",
-#      "rm -rf /home/azureuser/springmvcapp/*.*",
-#      "unzip -o /home/azureuser/springapp/springapp.zip -d /home/azureuser/springmvcapp",
-#      "sudo mkdir -p /var/log/springapp",
-#      "sudo cp /home/azureuser/springapp/springapp.service /etc/systemd/system/springapp.service",
-#      "sudo systemctl start springapp.service",
-#      "sudo systemctl enable springapp.service"
-#    ]
-#  }
-#}

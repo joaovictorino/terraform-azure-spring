@@ -1,20 +1,24 @@
-# Terraform criando IaaS no Azure e fazendo deploy de Java e MySQL
+# Terraform criando IaaS no Azure e fazendo deploy de Java 11 e MySQL 8
 
 Pré-requisitos
+
 - Az-cli instalado
 - Terraform instalado
 
 Logar no Azure via az-cli, o navegador será aberto para que o login seja feito
-````sh
+
+```sh
 az login
-````
+```
 
 Inicializar o Terraform
-````sh
+
+```sh
 terraform init
-````
+```
 
 Executar o Terraform
-````sh
+
+```sh
 terraform apply -auto-approve
-````
+```

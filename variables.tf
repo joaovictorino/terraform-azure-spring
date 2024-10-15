@@ -9,3 +9,7 @@ variable "password" {
 variable "location" {
   description = "Location Azure"
 }
+
+variable "subscription_id" {
+  description = "Subscription Id Azure"
+}
